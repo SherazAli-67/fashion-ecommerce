@@ -1,4 +1,5 @@
 import 'package:fashion_ecommerce/constants/string_const.dart';
+import 'package:fashion_ecommerce/router/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,12 +12,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: StringConst.appTitle,
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: .light
       ),
-      home: Scaffold(body: Center(child: Text("Fashion ecommerce"),),)
+      routerConfig: router,
+      builder: (ctx, child)=> child!,
     );
   }
 }
