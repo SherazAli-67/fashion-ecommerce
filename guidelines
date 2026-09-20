@@ -1,0 +1,79 @@
+Coding and project structure guidelines
+
+1. Use dot shot hands in entire project
+2. Use one line for each property, like below
+
+Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          shape: .circle,
+          border: .all(color: AppColors.primaryGreenColor, width: 5)
+      ),
+      padding: .symmetric(horizontal: 10, vertical: 4),
+      child: Image.asset(cartItem, height: 40, width: 26,),
+)
+Except for such cases Images, instead of
+
+ Text(
+StringConst.teamMembers,
+ style: AppTextStyles.taskMeta,
+),
+
+use
+Text(StringConst.ongoingTasks, style: AppTextStyles.sectionTitle,),
+
+3. Create dummy data in the app lib/core/app_data.dart to use it in the project
+4. If the project uses the data other than string then create models first in the directory
+
+ lib/core/models
+
+ and then create their list in the
+  lib/core/app_data.dart
+
+and then use it where needed
+
+5. Make sure to use flutter_svg for svg icons as below  in one line
+
+SvgPicture.asset(AppIcons.icDelete, colorFilter: .mode(Colors.black, .srcIn),
+
+6. Only use go_router for the routing as per the current structure
+
+7. Do not add comments to the code
+
+8. Note the followings
+
+instead of
+
+onSelected: (index) {
+                  setState(() {
+                    _selectedDayIndex = index;
+                  });
+                },
+
+use
+onSelected: (index)=> setState(()=> _selectedDayIndex = index),
+
+instead of
+
+ TimelineTaskCard(
+                            task: AppData.timelineTasks[i],
+                          ),
+
+use
+ TimelineTaskCard(task: AppData.timelineTasks[i],)
+
+If any code is possible in one-line, make it to one line
+
+9. Use spacing parameter for giving spacing in column or row items
+10. The widgets directory lib/presentation/widgets should only contain the widgets that are used by multiple screens. If any widget is being used only one screen then keep it within that screen by creating their builder
+  Widget _buildCartItemWidget({required String cartItem}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          shape: .circle,
+          border: .all(color: AppColors.primaryGreenColor, width: 5)
+      ),
+      padding: .symmetric(horizontal: 10, vertical: 4),
+      child: Image.asset(cartItem, height: 40, width: 26,),
+    );
+  }

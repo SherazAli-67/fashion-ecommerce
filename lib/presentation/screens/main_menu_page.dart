@@ -14,13 +14,14 @@ class MainMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        type: .fixed,
+        backgroundColor: Colors.white,
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: AppColors.unSelectedGreyColor,
         selectedLabelStyle: AppTextStyles.navigationTextStyle.copyWith(fontWeight: .w600, color: AppColors.primaryColor),
         unselectedLabelStyle: AppTextStyles.navigationTextStyle.copyWith(fontWeight: .w500, color: AppColors.unSelectedGreyColor),
         items: [
           buildBottomNavigationBarItem(icon: navigationShell.currentIndex == 0 ? AppIcons.icHomeSelected : AppIcons.icHome, label: 'Home'),
-          buildBottomNavigationBarItem(icon: AppIcons.icSearch, label: 'Search'),
           buildBottomNavigationBarItem(icon: AppIcons.icSearch, label: 'Search'),
           buildBottomNavigationBarItem(icon: AppIcons.icMessage, label: 'Message'),
           buildBottomNavigationBarItem(icon: AppIcons.icProfile, label: 'Profile'),
