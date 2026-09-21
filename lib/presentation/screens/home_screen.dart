@@ -51,20 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: .start,
             children: [
               //homeGreeting, homeGreeting
-              Text(StringConst.homeGreeting, style: AppTextStyles.homeGreeting),
               //homeGreetingTitle, homeGreetingTitle
-              Text(StringConst.homeGreetingTitle, style: AppTextStyles.homeGreetingTitle),
             ],
           ),
         ),
-        ClipOval(
+      /*  ClipOval(
           child: Image.asset(
             AppIcons.homeProfileImage,
             width: 39,
             height: 39,
             fit: .cover,
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -79,12 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 8,
             crossAxisAlignment: .start,
             children: [
-              Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeCollectionTitle),
-              Text(StringConst.homeCollectionSubtitle, style: AppTextStyles.homeCollectionSubtitle),
+              //homeCollectionTitle, homeCollectionTitle
+
+              //homeCollectionSubtitle, homeCollectionSubtitle
             ],
           ),
         ),
-        _buildCollectionImage(),
+        //collectionImage
       ],
     );
   }
@@ -140,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
       spacing: 16,
       crossAxisAlignment: .start,
       children: [
-        Text(StringConst.homeCategoryTitle, style: AppTextStyles.homeSectionTitle),
+        //homeCategoryTitle, homeSectionTitle,
         SingleChildScrollView(
           scrollDirection: .horizontal,
           child: Row(
@@ -169,13 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: .symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : AppColors.neutral200,
-          borderRadius: .circular(128),
+     /*     color: isSelected ? AppColors.primaryColor : AppColors.neutral200,
+          borderRadius: .circular(128),*/
         ),
-        child: Text(
-          label,
-          style: isSelected ? AppTextStyles.homeCategorySelected : AppTextStyles.homeCategoryUnselected,
-        ),
+        child:
+        //label, isSelected ? selected : unSelected
+        const SizedBox()
       ),
     );
   }
@@ -188,13 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: Column(
             spacing: 16,
-            children: AppData.homeGridLeft.map(_buildGridItem).toList(),
+            children: [],
+            // children: AppData.homeGridLeft.map(_buildGridItem).toList(),
           ),
         ),
         Expanded(
           child: Column(
             spacing: 16,
-            children: AppData.homeGridRight.map(_buildGridItem).toList(),
+            children: [],
+            // children: AppData.homeGridRight.map(_buildGridItem).toList(),
           ),
         ),
       ],
