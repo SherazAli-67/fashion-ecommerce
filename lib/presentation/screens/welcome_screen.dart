@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:fashion_ecommerce/constants/string_const.dart';
 import 'package:fashion_ecommerce/core/app_colors.dart';
 import 'package:fashion_ecommerce/core/app_data.dart';
+import 'package:fashion_ecommerce/core/app_icons.dart';
 import 'package:fashion_ecommerce/core/app_textstyles.dart';
 import 'package:fashion_ecommerce/router/router.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
       body: Stack(
         fit: .expand,
         children: [
-          Image.asset(StringConst.welcomeBackgroundImage, fit: .cover),
+          Image.asset(AppIcons.welcomeBackgroundImage, fit: .cover),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(

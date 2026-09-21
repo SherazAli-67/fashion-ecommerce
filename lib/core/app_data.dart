@@ -1,10 +1,12 @@
 import 'package:fashion_ecommerce/core/models/lookbook_grid_item.dart';
 import 'package:fashion_ecommerce/core/models/lookbook_image.dart';
 
+import 'app_icons.dart';
+
 class AppData {
   static const lookbookImages = [
     LookbookImage(
-      imagePath: 'assets/images/lookbook_image_view.jpg',
+      imagePath: AppIcons.lookupImage,
       title: 'Image Name dolor sit amet, consectetur',
       username: 'Username',
     ),
@@ -20,21 +22,21 @@ class AppData {
   ];
 
   static const homeGridLeft = [
-    LookbookGridItem(imagePath: 'assets/images/home_grid_01.jpg', height: 100),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_02.jpg', height: 160),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_03.jpg', height: 100, borderRadius: 24),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_04.jpg', height: 160),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_05.jpg', height: 160),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_06.jpg', height: 100),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg1, height: 100),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg2, height: 160),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg3, height: 100, borderRadius: 24),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg4, height: 160),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg5, height: 160),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg6, height: 100),
   ];
 
   static const homeGridRight = [
-    LookbookGridItem(imagePath: 'assets/images/home_grid_07.jpg', height: 160, borderRadius: 24),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_08.jpg', height: 100, borderRadius: 24),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_09.jpg', height: 160),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_10.jpg', height: 100),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_11.jpg', height: 100, borderRadius: 24),
-    LookbookGridItem(imagePath: 'assets/images/home_grid_12.jpg', height: 160, borderRadius: 24),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg7, height: 160, borderRadius: 24),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg8, height: 100, borderRadius: 24),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg9, height: 160),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg10, height: 100),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg11, height: 100, borderRadius: 24),
+    LookbookGridItem(imagePath: AppIcons.homeGridImg12, height: 160, borderRadius: 24),
   ];
 
   static const welcomePageCount = 3;

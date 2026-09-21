@@ -50,14 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 4,
             crossAxisAlignment: .start,
             children: [
+              //homeGreeting, homeGreeting
               Text(StringConst.homeGreeting, style: AppTextStyles.homeGreeting),
+              //homeGreetingTitle, homeGreetingTitle
               Text(StringConst.homeGreetingTitle, style: AppTextStyles.homeGreetingTitle),
             ],
           ),
         ),
         ClipOval(
           child: Image.asset(
-            StringConst.homeProfileImage,
+            AppIcons.homeProfileImage,
             width: 39,
             height: 39,
             fit: .cover,
@@ -89,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCollectionImage() {
     return GestureDetector(
-      onTap: () => _openImageView(StringConst.homeCollectionImage),
+      onTap: () => _openImageView(AppIcons.homeCollectionImage),
       child: SizedBox(
         width: 150,
         height: 130,
@@ -102,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ClipRRect(
                 borderRadius: .circular(32),
                 child: Image.asset(
-                  StringConst.homeCollectionImage,
+                  AppIcons.homeCollectionImage,
                   width: 150,
                   height: 130,
                   fit: .cover,
