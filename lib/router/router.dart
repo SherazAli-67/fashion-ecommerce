@@ -6,6 +6,7 @@ import 'package:fashion_ecommerce/presentation/screens/messaging_screen.dart';
 import 'package:fashion_ecommerce/presentation/screens/profile_screen.dart';
 import 'package:fashion_ecommerce/presentation/screens/search_screen.dart';
 import 'package:fashion_ecommerce/presentation/screens/welcome_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter router = GoRouter(
@@ -14,7 +15,15 @@ GoRouter router = GoRouter(
     GoRoute(path: NamedRoutes.welcome.routeName, builder: (_, state) => WelcomeScreen()),
     GoRoute(
       path: NamedRoutes.imageView.routeName,
-      builder: (_, state) => ImageViewScreen(item: state.extra as LookbookImage),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: ImageViewScreen(item: state.extra as LookbookImage),
+        transitionDuration: const Duration(milliseconds: 450),
+        reverseTransitionDuration: const Duration(milliseconds: 450),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
     ),
     StatefulShellRoute.indexedStack(
       branches: [

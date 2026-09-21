@@ -8,10 +8,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class ImageViewScreen extends StatelessWidget {
+class ImageViewScreen extends StatefulWidget {
   const ImageViewScreen({super.key, required this.item});
 
   final LookbookImage item;
+
+  @override
+  State<ImageViewScreen> createState() => _ImageViewScreenState();
+}
+
+class _ImageViewScreenState extends State<ImageViewScreen> with SingleTickerProviderStateMixin {
+  static const _enterDuration = Duration(milliseconds: 350);
+  static const _backDelayMs = 200.0;
+  static const _cardDelayMs = 250.0;
+  static const _enterTotalMs = 600.0;
+  static const _cardSlideOffset = 40.0;
+
+  late final AnimationController _enterController;
+  late final Animation<double> _backEnter;
+  late final Animation<double> _cardEnter;
+
+  @override
+  void initState() {
+    super.initState();
+    _enterController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: _enterTotalMs.round()),
+    );
+    _backEnter = CurvedAnimation(
+      parent: _enterController,
+      curve: Interval(
+        _backDelayMs / _enterTotalMs,
+        (_backDelayMs + _enterDuration.inMilliseconds) / _enterTotalMs,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+    _cardEnter = CurvedAnimation(
+      parent: _enterController,
+      curve: Interval(
+        _cardDelayMs / _enterTotalMs,
+        (_cardDelayMs + _enterDuration.inMilliseconds) / _enterTotalMs,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _enterController.value = 1;
+        return;
+      }
+      _enterController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _enterController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +75,43 @@ class ImageViewScreen extends StatelessWidget {
       body: Stack(
         fit: .expand,
         children: [
-          Image.asset(item.imagePath, fit: .cover),
+          Hero(
+            tag: widget.item.imagePath,
+            child: Image.asset(widget.item.imagePath, fit: .cover),
+          ),
           Positioned(
             left: 20,
             top: MediaQuery.paddingOf(context).top + 12,
-            child: _buildBackButton(context),
+            child: FadeTransition(opacity: _backEnter, child: _buildBackButton()),
           ),
           Positioned(
             left: 20,
             right: 20,
             bottom: 35,
-            child: _buildInfoCard(),
+            child: _buildAnimatedInfoCard(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
+  Widget _buildAnimatedInfoCard() {
+    return AnimatedBuilder(
+      animation: _cardEnter,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _cardEnter.value,
+          child: Transform.translate(
+            offset: Offset(0, _cardSlideOffset * (1 - _cardEnter.value)),
+            child: child,
+          ),
+        );
+      },
+      child: _buildInfoCard(),
+    );
+  }
+
+  Widget _buildBackButton() {
     return GestureDetector(
       onTap: () => context.pop(),
       child: ClipOval(
@@ -72,8 +146,8 @@ class ImageViewScreen extends StatelessWidget {
         crossAxisAlignment: .start,
         mainAxisSize: .min,
         children: [
-          Text(item.title, style: AppTextStyles.imageViewTitle),
-          Text(item.username, style: AppTextStyles.imageViewUsername),
+          Text(widget.item.title, style: AppTextStyles.imageViewTitle),
+          Text(widget.item.username, style: AppTextStyles.imageViewUsername),
         ],
       ),
     );
