@@ -7,4 +7,5 @@ class AppIcons {
   static const icMessage = '${_iconsPath}ic_message.svg';
   static const icProfile = '${_iconsPath}ic_profile.svg';
   static const icArrowLeft = '${_iconsPath}ic_arrow_left.svg';
+  static const icStar = '${_iconsPath}ic_star.svg';
 }

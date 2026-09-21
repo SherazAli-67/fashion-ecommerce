@@ -15,7 +15,9 @@ class MainMenuPage extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: .fixed,
-        backgroundColor: Colors.white,
+        currentIndex: navigationShell.currentIndex,
+        onTap: (index) => navigationShell.goBranch(index),
+        backgroundColor: AppColors.whiteColor,
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: AppColors.unSelectedGreyColor,
         selectedLabelStyle: AppTextStyles.navigationTextStyle.copyWith(fontWeight: .w600, color: AppColors.primaryColor),
@@ -33,8 +35,8 @@ class MainMenuPage extends StatelessWidget {
 
   BottomNavigationBarItem buildBottomNavigationBarItem({required String icon, required String label}) {
     return BottomNavigationBarItem(
-          icon: SvgPicture.asset(icon),
-          label: label,
-        );
+      icon: SvgPicture.asset(icon),
+      label: label,
+    );
   }
 }
