@@ -4,8 +4,11 @@ import 'package:fashion_ecommerce/core/app_data.dart';
 import 'package:fashion_ecommerce/core/app_icons.dart';
 import 'package:fashion_ecommerce/core/app_textstyles.dart';
 import 'package:fashion_ecommerce/core/models/lookbook_grid_item.dart';
+import 'package:fashion_ecommerce/core/models/lookbook_image.dart';
+import 'package:fashion_ecommerce/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,37 +88,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCollectionImage() {
-    return SizedBox(
-      width: 150,
-      height: 130,
-      child: Stack(
-        clipBehavior: .none,
-        children: [
-          Positioned(
-            left: 0,
-            top: 6,
-            child: ClipRRect(
-              borderRadius: .circular(32),
-              child: Image.asset(
-                StringConst.homeCollectionImage,
-                width: 150,
-                height: 130,
-                fit: .cover,
+    return GestureDetector(
+      onTap: () => _openImageView(StringConst.homeCollectionImage),
+      child: SizedBox(
+        width: 150,
+        height: 130,
+        child: Stack(
+          clipBehavior: .none,
+          children: [
+            Positioned(
+              left: 0,
+              top: 6,
+              child: ClipRRect(
+                borderRadius: .circular(32),
+                child: Image.asset(
+                  StringConst.homeCollectionImage,
+                  width: 150,
+                  height: 130,
+                  fit: .cover,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: -6,
-            top: 0,
-            child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
-          ),
-          Positioned(
-            right: -6,
-            bottom: -6,
-            child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
-          ),
-        ],
+            Positioned(
+              left: -6,
+              top: 0,
+              child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
+            ),
+            Positioned(
+              right: -6,
+              bottom: -6,
+              child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  void _openImageView(String imagePath) {
+    final base = AppData.lookbookImages.first;
+    context.push(
+      NamedRoutes.imageView.routeName,
+      extra: LookbookImage(imagePath: imagePath, title: base.title, username: base.username),
     );
   }
 
@@ -186,13 +200,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildGridItem(LookbookGridItem item) {
-    return ClipRRect(
-      borderRadius: .circular(item.borderRadius),
-      child: Image.asset(
-        item.imagePath,
-        width: double.infinity,
-        height: item.height,
-        fit: .cover,
+    return GestureDetector(
+      onTap: () => _openImageView(item.imagePath),
+      child: ClipRRect(
+        borderRadius: .circular(item.borderRadius),
+        child: Image.asset(
+          item.imagePath,
+          width: double.infinity,
+          height: item.height,
+          fit: .cover,
+        ),
       ),
     );
   }
