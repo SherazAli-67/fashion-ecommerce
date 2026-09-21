@@ -50,19 +50,19 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 4,
             crossAxisAlignment: .start,
             children: [
-              //homeGreeting, homeGreeting
-              //homeGreetingTitle, homeGreetingTitle
+              Text(StringConst.homeGreeting, style: AppTextStyles.homeGreeting,),
+              Text(StringConst.homeGreetingTitle, style: AppTextStyles.homeGreetingTitle,),
             ],
           ),
         ),
-      /*  ClipOval(
+          ClipOval(
           child: Image.asset(
             AppIcons.homeProfileImage,
             width: 39,
             height: 39,
             fit: .cover,
           ),
-        ),*/
+        ),
       ],
     );
   }
@@ -77,13 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 8,
             crossAxisAlignment: .start,
             children: [
-              //homeCollectionTitle, homeCollectionTitle
-
-              //homeCollectionSubtitle, homeCollectionSubtitle
+              Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeCollectionTitle,),
+              Text(StringConst.homeCollectionSubtitle, style: AppTextStyles.homeCollectionSubtitle,)
             ],
           ),
         ),
         //collectionImage
+        _buildCollectionImage()
       ],
     );
   }
@@ -140,13 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: .start,
       children: [
         //homeCategoryTitle, homeSectionTitle,
+        Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeSectionTitle,),
         SingleChildScrollView(
           scrollDirection: .horizontal,
           child: Row(
             spacing: 12,
             children: List.generate(
               AppData.categories.length,
-              (index) => _buildCategoryChip(
+                  (index) => _buildCategoryChip(
                 label: AppData.categories[index],
                 isSelected: _selectedCategoryIndex == index,
                 onTap: () => setState(() => _selectedCategoryIndex = index),
@@ -166,14 +167,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: .symmetric(horizontal: 16, vertical: 6),
-        decoration: BoxDecoration(
-     /*     color: isSelected ? AppColors.primaryColor : AppColors.neutral200,
-          borderRadius: .circular(128),*/
-        ),
-        child:
-        //label, isSelected ? selected : unSelected
-        const SizedBox()
+          padding: .symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primaryColor : AppColors.neutral200,
+            borderRadius: .circular(128),
+          ),
+          child: Text(label, style: isSelected ? AppTextStyles.homeCategorySelected : AppTextStyles.homeCategoryUnselected,)
       ),
     );
   }
@@ -186,15 +185,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: Column(
             spacing: 16,
-            children: [],
-            // children: AppData.homeGridLeft.map(_buildGridItem).toList(),
+            children: AppData.homeGridLeft.map(_buildGridItem).toList(),
           ),
         ),
         Expanded(
           child: Column(
             spacing: 16,
-            children: [],
-            // children: AppData.homeGridRight.map(_buildGridItem).toList(),
+            children: AppData.homeGridRight.map(_buildGridItem).toList(),
           ),
         ),
       ],
