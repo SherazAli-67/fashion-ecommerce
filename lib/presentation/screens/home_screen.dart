@@ -17,8 +17,89 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  static const _enterDuration = Duration(milliseconds: 350);
+  static const _pressDuration = Duration(milliseconds: 120);
+  static const _sectionDelayMs = 80.0;
+  static const _gridDelayMs = 40.0;
+  static const _maxGridDelayMs = 480.0;
+  static const _enterTotalMs = 830.0;
+  static const _slideOffset = 16.0;
+
+  late final AnimationController _enterController;
+  late final Animation<double> _headerEnter;
+  late final Animation<double> _collectionEnter;
+  late final Animation<double> _categoryEnter;
+  late final List<Animation<double>> _gridEnters;
+
   int _selectedCategoryIndex = 0;
+  int? _pressedChipIndex;
+  String? _pressedImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _enterController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: _enterTotalMs.round()),
+    );
+    _headerEnter = _staggered(0);
+    _collectionEnter = _staggered(_sectionDelayMs);
+    _categoryEnter = _staggered(_sectionDelayMs * 2);
+    _gridEnters = List.generate(
+      AppData.homeGridLeft.length + AppData.homeGridRight.length,
+      (index) => _staggered(_gridStartMs(index)),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _enterController.value = 1;
+        return;
+      }
+      _enterController.forward();
+    });
+  }
+
+  double _gridStartMs(int visualIndex) {
+    return (_sectionDelayMs * 3 + visualIndex * _gridDelayMs).clamp(0, _maxGridDelayMs);
+  }
+
+  Animation<double> _staggered(double delayMs) {
+    return CurvedAnimation(
+      parent: _enterController,
+      curve: Interval(
+        delayMs / _enterTotalMs,
+        (delayMs + _enterDuration.inMilliseconds) / _enterTotalMs,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+  }
+
+  Future<void> _onImageTap(String imagePath) async {
+    if (_pressedImagePath != null) return;
+    setState(() => _pressedImagePath = imagePath);
+    if (!MediaQuery.disableAnimationsOf(context)) {
+      await Future<void>.delayed(_pressDuration);
+    }
+    if (!mounted) return;
+    _openImageView(imagePath);
+    setState(() => _pressedImagePath = null);
+  }
+
+  void _openImageView(String imagePath) {
+    final base = AppData.lookbookImages.first;
+    context.push(
+      NamedRoutes.imageView.routeName,
+      extra: LookbookImage(imagePath: imagePath, title: base.title, username: base.username),
+    );
+  }
+
+  @override
+  void dispose() {
+    _enterController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +112,30 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 16,
             crossAxisAlignment: .start,
             children: [
-              _buildHeader(),
-              _buildCollectionSection(),
-              _buildCategorySection(),
+              _fadeSlideIn(animation: _headerEnter, child: _buildHeader()),
+              _fadeSlideIn(animation: _collectionEnter, child: _buildCollectionSection()),
+              _fadeSlideIn(animation: _categoryEnter, child: _buildCategorySection()),
               _buildMasonryGrid(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _fadeSlideIn({required Animation<double> animation, required Widget child}) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: animation.value,
+          child: Transform.translate(
+            offset: Offset(0, _slideOffset * (1 - animation.value)),
+            child: child,
+          ),
+        );
+      },
+      child: child,
     );
   }
 
@@ -50,12 +147,12 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 4,
             crossAxisAlignment: .start,
             children: [
-              Text(StringConst.homeGreeting, style: AppTextStyles.homeGreeting,),
-              Text(StringConst.homeGreetingTitle, style: AppTextStyles.homeGreetingTitle,),
+              Text(StringConst.homeGreeting, style: AppTextStyles.homeGreeting),
+              Text(StringConst.homeGreetingTitle, style: AppTextStyles.homeGreetingTitle),
             ],
           ),
         ),
-          ClipOval(
+        ClipOval(
           child: Image.asset(
             AppIcons.homeProfileImage,
             width: 39,
@@ -77,60 +174,59 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 8,
             crossAxisAlignment: .start,
             children: [
-              Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeCollectionTitle,),
-              Text(StringConst.homeCollectionSubtitle, style: AppTextStyles.homeCollectionSubtitle,)
+              Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeCollectionTitle),
+              Text(StringConst.homeCollectionSubtitle, style: AppTextStyles.homeCollectionSubtitle),
             ],
           ),
         ),
-        //collectionImage
-        _buildCollectionImage()
+        _buildCollectionImage(),
       ],
     );
   }
 
   Widget _buildCollectionImage() {
     return GestureDetector(
-      onTap: () => _openImageView(AppIcons.homeCollectionImage),
-      child: SizedBox(
-        width: 150,
-        height: 130,
-        child: Stack(
-          clipBehavior: .none,
-          children: [
-            Positioned(
-              left: 0,
-              top: 6,
-              child: ClipRRect(
-                borderRadius: .circular(32),
-                child: Image.asset(
-                  AppIcons.homeCollectionImage,
-                  width: 150,
-                  height: 130,
-                  fit: .cover,
+      onTap: () => _onImageTap(AppIcons.homeCollectionImage),
+      child: AnimatedScale(
+        scale: _pressedImagePath == AppIcons.homeCollectionImage ? 0.98 : 1,
+        duration: _pressDuration,
+        curve: Curves.easeOutCubic,
+        child: SizedBox(
+          width: 150,
+          height: 130,
+          child: Stack(
+            clipBehavior: .none,
+            children: [
+              Positioned(
+                left: 0,
+                top: 6,
+                child: Hero(
+                  tag: AppIcons.homeCollectionImage,
+                  child: ClipRRect(
+                    borderRadius: .circular(32),
+                    child: Image.asset(
+                      AppIcons.homeCollectionImage,
+                      width: 150,
+                      height: 130,
+                      fit: .cover,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: -6,
-              top: 0,
-              child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
-            ),
-            Positioned(
-              right: -6,
-              bottom: -6,
-              child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
-            ),
-          ],
+              Positioned(
+                left: -6,
+                top: 0,
+                child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
+              ),
+              Positioned(
+                right: -6,
+                bottom: -6,
+                child: SvgPicture.asset(AppIcons.icStar, width: 30, height: 30),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  void _openImageView(String imagePath) {
-    final base = AppData.lookbookImages.first;
-    context.push(
-      NamedRoutes.imageView.routeName,
-      extra: LookbookImage(imagePath: imagePath, title: base.title, username: base.username),
     );
   }
 
@@ -139,18 +235,20 @@ class _HomeScreenState extends State<HomeScreen> {
       spacing: 16,
       crossAxisAlignment: .start,
       children: [
-        //homeCategoryTitle, homeSectionTitle,
-        Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeSectionTitle,),
+        Text(StringConst.homeCollectionTitle, style: AppTextStyles.homeSectionTitle),
         SingleChildScrollView(
           scrollDirection: .horizontal,
           child: Row(
             spacing: 12,
             children: List.generate(
               AppData.categories.length,
-                  (index) => _buildCategoryChip(
+              (index) => _buildCategoryChip(
                 label: AppData.categories[index],
                 isSelected: _selectedCategoryIndex == index,
+                isPressed: _pressedChipIndex == index,
                 onTap: () => setState(() => _selectedCategoryIndex = index),
+                onTapDown: () => setState(() => _pressedChipIndex = index),
+                onTapEnd: () => setState(() => _pressedChipIndex = null),
               ),
             ),
           ),
@@ -162,17 +260,35 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCategoryChip({
     required String label,
     required bool isSelected,
+    required bool isPressed,
     required VoidCallback onTap,
+    required VoidCallback onTapDown,
+    required VoidCallback onTapEnd,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      onTapDown: (_) => onTapDown(),
+      onTapUp: (_) => onTapEnd(),
+      onTapCancel: onTapEnd,
+      child: AnimatedScale(
+        scale: isPressed ? 0.97 : 1,
+        duration: _pressDuration,
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: _enterDuration,
+          curve: Curves.easeOutCubic,
           padding: .symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primaryColor : AppColors.neutral200,
             borderRadius: .circular(128),
           ),
-          child: Text(label, style: isSelected ? AppTextStyles.homeCategorySelected : AppTextStyles.homeCategoryUnselected,)
+          child: AnimatedDefaultTextStyle(
+            duration: _enterDuration,
+            curve: Curves.easeOutCubic,
+            style: isSelected ? AppTextStyles.homeCategorySelected : AppTextStyles.homeCategoryUnselected,
+            child: Text(label),
+          ),
+        ),
       ),
     );
   }
@@ -185,13 +301,25 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           child: Column(
             spacing: 16,
-            children: AppData.homeGridLeft.map(_buildGridItem).toList(),
+            children: [
+              for (var i = 0; i < AppData.homeGridLeft.length; i++)
+                _fadeSlideIn(
+                  animation: _gridEnters[i * 2],
+                  child: _buildGridItem(AppData.homeGridLeft[i]),
+                ),
+            ],
           ),
         ),
         Expanded(
           child: Column(
             spacing: 16,
-            children: AppData.homeGridRight.map(_buildGridItem).toList(),
+            children: [
+              for (var i = 0; i < AppData.homeGridRight.length; i++)
+                _fadeSlideIn(
+                  animation: _gridEnters[i * 2 + 1],
+                  child: _buildGridItem(AppData.homeGridRight[i]),
+                ),
+            ],
           ),
         ),
       ],
@@ -200,14 +328,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildGridItem(LookbookGridItem item) {
     return GestureDetector(
-      onTap: () => _openImageView(item.imagePath),
-      child: ClipRRect(
-        borderRadius: .circular(item.borderRadius),
-        child: Image.asset(
-          item.imagePath,
-          width: double.infinity,
-          height: item.height,
-          fit: .cover,
+      onTap: () => _onImageTap(item.imagePath),
+      child: AnimatedScale(
+        scale: _pressedImagePath == item.imagePath ? 0.98 : 1,
+        duration: _pressDuration,
+        curve: Curves.easeOutCubic,
+        child: Hero(
+          tag: item.imagePath,
+          child: ClipRRect(
+            borderRadius: .circular(item.borderRadius),
+            child: Image.asset(
+              item.imagePath,
+              width: double.infinity,
+              height: item.height,
+              fit: .cover,
+            ),
+          ),
         ),
       ),
     );
