@@ -36,4 +36,7 @@ class AppData {
     LookbookGridItem(imagePath: 'assets/images/home_grid_11.jpg', height: 100, borderRadius: 24),
     LookbookGridItem(imagePath: 'assets/images/home_grid_12.jpg', height: 160, borderRadius: 24),
   ];
+
+  static const welcomePageCount = 3;
+  static const welcomeActivePageIndex = 1;
 }

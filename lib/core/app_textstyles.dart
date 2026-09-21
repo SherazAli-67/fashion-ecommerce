@@ -79,4 +79,38 @@ class AppTextStyles {
     color: AppColors.unSelectedGreyColor,
     letterSpacing: 0.2,
   );
+
+  static final welcomeTitle = TextStyle(
+    fontFamily: 'Urbanist',
+    fontSize: 28,
+    fontWeight: .w700,
+    color: AppColors.whiteColor,
+    letterSpacing: 0.2,
+    height: 1.4,
+  );
+
+  static final welcomeTitleAccent = TextStyle(
+    fontFamily: 'Urbanist',
+    fontSize: 28,
+    fontWeight: .w700,
+    color: AppColors.primaryColor,
+    letterSpacing: 0.2,
+    height: 1.4,
+  );
+
+  static final welcomeSubtitle = TextStyle(
+    fontFamily: 'Urbanist',
+    fontSize: 12,
+    fontWeight: .w500,
+    color: AppColors.neutral300,
+    letterSpacing: 0.2,
+  );
+
+  static final welcomeSkip = TextStyle(
+    fontFamily: 'Urbanist',
+    fontSize: 10,
+    fontWeight: .w600,
+    color: AppColors.neutral300,
+    letterSpacing: 0.2,
+  );
 }

@@ -9,7 +9,7 @@ import 'package:fashion_ecommerce/presentation/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter router = GoRouter(
-  initialLocation: NamedRoutes.home.routeName,
+  initialLocation: NamedRoutes.welcome.routeName,
   routes: [
     GoRoute(path: NamedRoutes.welcome.routeName, builder: (_, state) => WelcomeScreen()),
     GoRoute(

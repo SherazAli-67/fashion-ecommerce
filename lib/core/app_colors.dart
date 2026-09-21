@@ -10,4 +10,8 @@ class AppColors {
   static const neutral300 = Color(0xffeeeeee);
   static const frostedBackFill = Color(0x59ffffff);
   static const frostedBackBorder = Color(0xccffffff);
+  static const frostedSkipFill = Color(0x38ffffff);
+  static const frostedSkipBorder = Color(0x03ffffff);
+  static const neutral700 = Color(0xff757575);
+  static const gradientBlack30 = Color(0x4d000000);
 }
